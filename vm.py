@@ -10,6 +10,7 @@ OPCODES = {
 }
 
 with open(file + ".bin", "rb") as binary:
+    # all opcodes must use values from registers aside from load which is used to add values into registers
     program_counter = 0
     registers = {}
     stack = []
@@ -51,8 +52,6 @@ with open(file + ".bin", "rb") as binary:
             program_counter += 6
 
         elif opcode == OPCODES["jump"]:
-            # op1 = number of instructions to jump
-            # op2 = register containing condition
             if registers[op2] > 0:
                 program_counter -= registers[op1] * 6
             else:
