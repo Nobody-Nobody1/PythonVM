@@ -1,10 +1,12 @@
-load R1, 10     ; A
-load R2, 4      ; B
-load R3, 4      ; jump distance
-load R4, 1      ; unused but keeps structure consistent
+load R0, 10     ; initial value
+load R1, 20     ; increment
+load R2, 5      ; loop counter and determines when jump should go forward
+load R3, 4      ; jump amount (R3 amount)
+load R4, 1      ; subtraction amount (R4 amount)
 
-take R1, R2     ; R1 = A - B
-jump R3, R1     ; if R1 > 0 → backward (true)
-
-keep R1         ; output result (A - B)
+plus R0, R1     ; R0 += R1
+keep R0         ; push R0 onto stack
+keep R2         ; push R2 onto stack
+take R2, R4      ; R2 -= 1
+jump R3, R2     ; jump back R3 instructions
 halt
