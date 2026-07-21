@@ -1,5 +1,6 @@
 file = "program"
 
+#only supports 4 byte opcodes (all opcodes are designed to be only 4 bytes) and 2 operands are supported only for minimalism
 with open(file + ".vasm", "r") as program, open(file + ".bin", "wb") as binary:
     for line in program:
         line = line.strip()

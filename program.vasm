@@ -1,5 +1,7 @@
 load R0, 10
 load R1, 20
+load R3, 2
 plus R0, R1
-keep R1
+keep R0
+jump R3
 halt
