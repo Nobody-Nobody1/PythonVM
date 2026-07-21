@@ -37,4 +37,8 @@ with open(file + ".vasm", "r") as program, open(file + ".bin", "wb") as binary:
         # 4. write 6 bytes
         binary.write(opcode_bytes)
         binary.write(bytes([reg1]))
+        
+        # encode signed byte
+        if reg2 < 0:
+            reg2 = (256 + reg2) % 256   # two's complement
         binary.write(bytes([reg2]))

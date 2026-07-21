@@ -29,6 +29,13 @@ with open(file + ".bin", "rb") as binary:
         op1 = instr[4]
         op2 = instr[5]
 
+        # decode signed byte
+        if op1 >= 128:
+            op1 = op1 - 256
+        if op2 >= 128:
+            op2 = op2 - 256
+
+
         # auto-init only op1 (always a register)
         if op1 not in registers:
             registers[op1] = 0
@@ -55,10 +62,12 @@ with open(file + ".bin", "rb") as binary:
 
         elif opcode == OPCODES["jump"]:
             if registers[op2] > 0:
-                program_counter -= registers[op1] * 6
-            else:
+                if registers[op1] >= 0: # forward jump
+                    program_counter += registers[op1] * 6
+                else: # backward jump
+                    program_counter -= abs(registers[op1]) * 6
+            else: # fall-through
                 program_counter += 6
-
 
         elif opcode == OPCODES["halt"]:
             print("reached halt")
