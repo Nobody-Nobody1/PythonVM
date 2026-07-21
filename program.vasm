@@ -1,11 +1,8 @@
-load R0, 10     ; initial value
-load R1, 20     ; increment
-load R2, 5      ; loop counter and determines when jump should go forward
-load R3, 4      ; jump amount (R3 amount)
+load R0, 2   ; jump back 1 instruction
+load R1, 5   ; loop counter
+load R2, 1   ; decrement amount
 
-plus R0, R1     ; R0 += R1
-keep R0         ; push R0 onto stack
-take R2, 1      ; R2 -= 1
-keep R2         ; push R2 onto stack
-jump R3, R2     ; jump back R3 instructions
+take R1, R2  ; R1 -= 1
+keep R1
+jump R0, R1  ; loop until R1 == 0
 halt
