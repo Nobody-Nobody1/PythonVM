@@ -1,0 +1,5 @@
+load R0, 10
+load R1, 20
+plus R0, R1
+keep R1
+halt
