@@ -29,10 +29,12 @@ with open(file + ".bin", "rb") as binary:
         op1 = instr[4]
         op2 = instr[5]
 
-        # auto-init registers
+        # auto-init only op1 (always a register)
         if op1 not in registers:
             registers[op1] = 0
-        if op2 not in registers:
+
+        # auto-init op2 ONLY if opcode is NOT load
+        if opcode != OPCODES["load"] and op2 not in registers:
             registers[op2] = 0
 
         if opcode == OPCODES["load"]:
