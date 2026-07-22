@@ -7,12 +7,12 @@ OPCODES = {
     "halt": "68616c74",
 }
 
-DEBUG = True
+DEBUG = False
 STEP_MODE = False
 
 def run(binary_file):
     program_counter = 0
-    registers = {}
+    registers = {r: 0 for r in range(256)}   # full unsigned register set
     stack = []
     max_cycles = 10000
     cycles = 0
@@ -27,19 +27,12 @@ def run(binary_file):
                 break
 
             opcode = instr[0:4].hex()
-            op1 = instr[4]
-            op2 = instr[5]
+            op1 = instr[4]          # now ALWAYS 0–255
+            op2 = instr[5]          # now ALWAYS 0–255
 
-            # decode signed bytes
-            if op1 >= 128:
-                op1 -= 256
-            if op2 >= 128:
-                op2 -= 256
-
-            if op1 not in registers:
-                registers[op1] = 0
-            if opcode != OPCODES["load"] and op2 not in registers:
-                registers[op2] = 0
+            # ----------------------------------------------------
+            # INSTRUCTIONS
+            # ----------------------------------------------------
 
             if opcode == OPCODES["load"]:
                 registers[op1] = op2
@@ -58,11 +51,10 @@ def run(binary_file):
                 program_counter += 6
 
             elif opcode == OPCODES["jump"]:
+                # jump only if condition register > 0
                 if registers[op2] > 0:
-                    if registers[op1] >= 0:
-                        program_counter += registers[op1] * 6
-                    else:
-                        program_counter -= abs(registers[op1]) * 6
+                    offset = registers[op1]
+                    program_counter += offset * 6
                 else:
                     program_counter += 6
 
@@ -75,16 +67,9 @@ def run(binary_file):
             if DEBUG or STEP_MODE:
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
-    # ------------------------------------------------------------
-    # NEW: ensure full register range exists (0–255)
-    # ------------------------------------------------------------
-    full_registers = {}
-    for r in range(256):
-        full_registers[r] = registers.get(r, 0)
-
     return {
         "pc": program_counter,
-        "registers": full_registers,
+        "registers": registers,
         "stack": stack,
         "cycles": cycles
     }

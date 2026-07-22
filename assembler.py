@@ -28,7 +28,7 @@ def assemble(src, out):
             if operands:
                 op1 = operands[0].replace(",", "")
                 if op1.startswith("R"):
-                    reg1 = int(op1[1:])     # FULL NUMBER (fix)
+                    reg1 = int(op1[1:])     # FULL NUMBER
                 else:
                     reg1 = int(op1)
             else:
@@ -40,14 +40,14 @@ def assemble(src, out):
             if len(operands) > 1:
                 op2 = operands[1].replace(",", "")
                 if op2.startswith("R"):
-                    reg2 = int(op2[1:])     # FULL NUMBER (fix)
+                    reg2 = int(op2[1:])     # FULL NUMBER
                 else:
                     reg2 = int(op2)
             else:
                 reg2 = 0
 
             # ----------------------------------------------------
-            # Encode signed bytes (wrap into 0–255)
+            # Force unsigned 0–255
             # ----------------------------------------------------
             reg1 &= 0xFF
             reg2 &= 0xFF

@@ -1,6 +1,6 @@
 # emulator.py
 # GUI wrapper around assembler.py and vm.py
-# Shows screen + console + register panel (0–255, scrollable)
+# Shows screen + console + register panel (0–255, negative registers mapped)
 
 import customtkinter as ctk
 import threading
@@ -21,7 +21,7 @@ class Emulator(ctk.CTk):
         self.binary_path = binary_path
         self.running = False
         self.run_thread = None
-        self.vm_state = None  # will store registers/stack/pc after run()
+        self.vm_state = None
 
         # --------------------------------------------------------
         # LAYOUT
@@ -36,14 +36,12 @@ class Emulator(ctk.CTk):
         left = ctk.CTkFrame(self)
         left.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
-        # Virtual screen (16x16)
         self.screen_canvas = ctk.CTkCanvas(
             left, width=320, height=320,
             bg="black", highlightthickness=0
         )
         self.screen_canvas.pack(padx=10, pady=10)
 
-        # Console output
         self.console_box = ctk.CTkTextbox(left, height=200)
         self.console_box.pack(fill="x", padx=10, pady=(0, 10))
 
@@ -54,7 +52,6 @@ class Emulator(ctk.CTk):
         right.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
         right.grid_rowconfigure(1, weight=1)
 
-        # Buttons
         controls = ctk.CTkFrame(right)
         controls.grid(row=0, column=0, pady=10)
 
@@ -79,7 +76,6 @@ class Emulator(ctk.CTk):
             label.pack(anchor="w")
             self.register_labels.append(label)
 
-        # UI update loop
         self.after(200, self.update_ui)
 
     # --------------------------------------------------------
@@ -103,10 +99,6 @@ class Emulator(ctk.CTk):
         self.vm_state = None
 
     def run_vm(self):
-        """
-        Runs vm.run(binary) in a thread.
-        Captures print() output and stores final VM state.
-        """
         import builtins
         original_print = builtins.print
 
@@ -117,7 +109,6 @@ class Emulator(ctk.CTk):
 
         builtins.print = capture_print
 
-        # Run VM and capture final state
         self.vm_state = vm.run(self.binary_path)
 
         builtins.print = original_print
@@ -131,16 +122,29 @@ class Emulator(ctk.CTk):
         if self.vm_state:
             regs = self.vm_state["registers"]
 
-            # Update fixed-range registers 0–255
+            # Start with all registers 0–255 = 0
+            mapped = {r: 0 for r in range(256)}
+
+            # Fill in positive registers normally
+            for r, val in regs.items():
+                if r >= 0:
+                    mapped[r] = val
+
+            # Map negative registers directly:
+            # -1 → 255, -2 → 254, etc.
+            for r, val in regs.items():
+                if r < 0:
+                    mapped[(r + 256) % 256] = val
+
+            # Update labels
             for r in range(256):
-                val = regs.get(r, 0)
-                self.register_labels[r].configure(text=f"R{r:03}: {val}")
+                self.register_labels[r].configure(text=f"R{r:03}: {mapped[r]}")
 
         self.after(200, self.update_ui)
 
 
 # --------------------------------------------------------
-# MAIN (same structure as your main.py)
+# MAIN
 # --------------------------------------------------------
 
 def main():
