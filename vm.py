@@ -7,7 +7,7 @@ OPCODES = {
     "halt": "68616c74",
 }
 
-DEBUG = False
+DEBUG = True
 STEP_MODE = False
 
 def run(binary_file):
@@ -75,6 +75,16 @@ def run(binary_file):
             if DEBUG or STEP_MODE:
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
+    # ------------------------------------------------------------
+    # NEW: ensure full register range exists (0–255)
+    # ------------------------------------------------------------
+    full_registers = {}
+    for r in range(256):
+        full_registers[r] = registers.get(r, 0)
 
-    print("Final stack:", stack)
-    print("Final registers:", registers)
+    return {
+        "pc": program_counter,
+        "registers": full_registers,
+        "stack": stack,
+        "cycles": cycles
+    }

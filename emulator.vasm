@@ -9,4 +9,5 @@ keep R0         ; push R0 onto stack
 keep R2         ; push R2 onto stack
 take R2, R4     ; R2 -= 1
 jump R3, R2     ; backward jump while R2 > 0
+load R-1, 10
 halt
