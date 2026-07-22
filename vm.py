@@ -43,11 +43,11 @@ def run(binary_file):
                 program_counter += 6
 
             elif opcode == OPCODES["plus"]:
-                registers[op1] += registers[op2]
+                registers[op1] = (registers[op1] + registers[op2]) % 256
                 program_counter += 6
 
             elif opcode == OPCODES["take"]:
-                registers[op1] -= registers[op2]
+                registers[op1] = (registers[op1] - registers[op2]) % 256
                 program_counter += 6
 
             elif opcode == OPCODES["keep"]:
