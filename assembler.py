@@ -37,9 +37,7 @@ def assemble(src, out):
             else:
                 reg2 = 0
 
-            # encode signed byte
-            if int(reg1) < 0:
-                reg1 = (256 + reg1) % 256
+            # encode signed byte for negative values in operand 2
             if int(reg2) < 0:
                 reg2 = (256 + reg2) % 256
 

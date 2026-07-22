@@ -29,9 +29,7 @@ def run(binary_file):
             op1 = instr[4]
             op2 = instr[5]
 
-            # decode signed bytes
-            if op1 >= 128:
-                op1 -= 256
+            # decode signed bytes for negative values in operand 2
             if op2 >= 128:
                 op2 -= 256
 
