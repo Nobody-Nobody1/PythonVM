@@ -1,5 +1,3 @@
-file = "program"
-
 OPCODES = {
     "load": "6c6f6164",
     "plus": "706c7573",
@@ -9,74 +7,70 @@ OPCODES = {
     "halt": "68616c74",
 }
 
-with open(file + ".bin", "rb") as binary:
-    # all opcodes must use values from registers aside from load which is used to add values into registers
+DEBUG = False
+
+def run(binary_file):
     program_counter = 0
     registers = {}
     stack = []
     max_cycles = 10000
     cycles = 0
 
-    while cycles < max_cycles:
-        cycles += 1
-        binary.seek(program_counter)
-        instr = binary.read(6)
+    with open(binary_file, "rb") as binary:
+        while cycles < max_cycles:
+            cycles += 1
+            binary.seek(program_counter)
+            instr = binary.read(6)
 
-        if not instr or len(instr) != 6:
-            break
+            if not instr or len(instr) != 6:
+                break
 
-        opcode = instr[0:4].hex()
-        op1 = instr[4]
-        op2 = instr[5]
+            opcode = instr[0:4].hex()
+            op1 = instr[4]
+            op2 = instr[5]
 
-        # decode signed byte
-        if op1 >= 128:
-            op1 = op1 - 256
-        if op2 >= 128:
-            op2 = op2 - 256
+            # decode signed bytes
+            if op1 >= 128:
+                op1 -= 256
+            if op2 >= 128:
+                op2 -= 256
 
+            if op1 not in registers:
+                registers[op1] = 0
+            if opcode != OPCODES["load"] and op2 not in registers:
+                registers[op2] = 0
 
-        # auto-init only op1 (always a register)
-        if op1 not in registers:
-            registers[op1] = 0
-
-        # auto-init op2 ONLY if opcode is NOT load
-        if opcode != OPCODES["load"] and op2 not in registers:
-            registers[op2] = 0
-
-        if opcode == OPCODES["load"]:
-            registers[op1] = op2
-            program_counter += 6
-
-        elif opcode == OPCODES["plus"]:
-            registers[op1] += registers[op2]
-            program_counter += 6
-
-        elif opcode == OPCODES["take"]:
-            registers[op1] -= registers[op2]
-            program_counter += 6
-
-        elif opcode == OPCODES["keep"]:
-            stack.append(registers[op1])
-            program_counter += 6
-
-        elif opcode == OPCODES["jump"]:
-            if registers[op2] > 0:
-                if registers[op1] >= 0: # forward jump
-                    program_counter += registers[op1] * 6
-                else: # backward jump
-                    program_counter -= abs(registers[op1]) * 6
-            else: # fall-through
+            if opcode == OPCODES["load"]:
+                registers[op1] = op2
                 program_counter += 6
 
-        elif opcode == OPCODES["halt"]:
-            print("reached halt")
-            break
+            elif opcode == OPCODES["plus"]:
+                registers[op1] += registers[op2]
+                program_counter += 6
 
-        print("HEX:", opcode)
-        print("OPCODE:", opcode)
-        print("OPERANDS:", op1, op2)
-        print("REGISTERS:", registers)
-        print("STACK:", stack)
-        print("COUNTER:", program_counter)
-        print()
+            elif opcode == OPCODES["take"]:
+                registers[op1] -= registers[op2]
+                program_counter += 6
+
+            elif opcode == OPCODES["keep"]:
+                stack.append(registers[op1])
+                program_counter += 6
+
+            elif opcode == OPCODES["jump"]:
+                if registers[op2] > 0:
+                    if registers[op1] >= 0:
+                        program_counter += registers[op1] * 6
+                    else:
+                        program_counter -= abs(registers[op1]) * 6
+                else:
+                    program_counter += 6
+
+            elif opcode == OPCODES["halt"]:
+                break
+
+            if DEBUG:
+                print("PC:", program_counter, "REG:", registers, "STACK:", stack)
+
+
+    print("Final stack:", stack)
+    print("Final registers:", registers)
