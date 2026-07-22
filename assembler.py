@@ -23,7 +23,7 @@ def assemble(src, out):
 
             # operand 1
             if operands:
-                reg1 = int(operands[0][1])
+                reg1 = (operands[0][1:]).replace(",", "")
             else:
                 reg1 = 0
 
@@ -31,20 +31,20 @@ def assemble(src, out):
             if len(operands) > 1:
                 op2 = operands[1].replace(",", "")
                 if op2.startswith("R"):
-                    reg2 = int(op2[1])
+                    reg2 = int(op2[1:])
                 else:
                     reg2 = int(op2)
             else:
                 reg2 = 0
 
             # encode signed byte
-            if reg1 < 0:
+            if int(reg1) < 0:
                 reg1 = (256 + reg1) % 256
-            if reg2 < 0:
+            if int(reg2) < 0:
                 reg2 = (256 + reg2) % 256
 
             binary.write(opcode_bytes)
-            binary.write(bytes([reg1]))
+            binary.write(bytes([int(reg1)]))
             binary.write(bytes([reg2]))
 
     print("Assembled:", out)
