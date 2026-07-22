@@ -8,11 +8,10 @@ OPCODES = {
 }
 
 DEBUG = False
-STEP_MODE = False
 
 def run(binary_file):
     program_counter = 0
-    registers = {r: 0 for r in range(256)}   # full unsigned register set
+    registers = {}
     stack = []
     max_cycles = 10000
     cycles = 0
@@ -27,12 +26,19 @@ def run(binary_file):
                 break
 
             opcode = instr[0:4].hex()
-            op1 = instr[4]          # now ALWAYS 0–255
-            op2 = instr[5]          # now ALWAYS 0–255
+            op1 = instr[4]
+            op2 = instr[5]
 
-            # ----------------------------------------------------
-            # INSTRUCTIONS
-            # ----------------------------------------------------
+            # decode signed bytes
+            if op1 >= 128:
+                op1 -= 256
+            if op2 >= 128:
+                op2 -= 256
+
+            if op1 not in registers:
+                registers[op1] = 0
+            if opcode != OPCODES["load"] and op2 not in registers:
+                registers[op2] = 0
 
             if opcode == OPCODES["load"]:
                 registers[op1] = op2
@@ -51,25 +57,20 @@ def run(binary_file):
                 program_counter += 6
 
             elif opcode == OPCODES["jump"]:
-                # jump only if condition register > 0
                 if registers[op2] > 0:
-                    offset = registers[op1]
-                    program_counter += offset * 6
+                    if registers[op1] >= 0:
+                        program_counter += registers[op1] * 6
+                    else:
+                        program_counter -= abs(registers[op1]) * 6
                 else:
                     program_counter += 6
 
             elif opcode == OPCODES["halt"]:
                 break
 
-            if STEP_MODE:
-                input("Press Enter to step...")
-
-            if DEBUG or STEP_MODE:
+            if DEBUG:
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
-    return {
-        "pc": program_counter,
-        "registers": registers,
-        "stack": stack,
-        "cycles": cycles
-    }
+
+    print("Final stack:", stack)
+    print("Final registers:", registers)
