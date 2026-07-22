@@ -8,6 +8,7 @@ OPCODES = {
 }
 
 DEBUG = False
+STEP_MODE = False
 
 def run(binary_file):
     program_counter = 0
@@ -68,7 +69,10 @@ def run(binary_file):
             elif opcode == OPCODES["halt"]:
                 break
 
-            if DEBUG:
+            if STEP_MODE:
+                input("Press Enter to step...")
+
+            if DEBUG or STEP_MODE:
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
 
