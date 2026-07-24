@@ -7,7 +7,7 @@ OPCODES = {
     "halt": "68616c74",
 }
 
-DEBUG = False
+DEBUG = True
 
 def run(binary_file):
     program_counter = 0
@@ -66,9 +66,14 @@ def run(binary_file):
             elif opcode == OPCODES["halt"]:
                 break
 
+            # OS specific logic
+            os_logic(registers, stack, program_counter)
+
             if DEBUG:
+                input ("Press ENTER to go to the next state")
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
-
-    print("Final stack:", stack)
-    print("Final registers:", registers)
+def os_logic(registers, stack, program_counter):
+    print(registers)
+    print(stack)
+    print(program_counter)

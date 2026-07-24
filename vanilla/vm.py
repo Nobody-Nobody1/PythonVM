@@ -67,8 +67,8 @@ def run(binary_file):
                 break
 
             if DEBUG:
+                input ("Press ENTER to go to the next state")
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
-
 
     print("Final stack:", stack)
     print("Final registers:", registers)

@@ -1,6 +1,6 @@
 import assembler as assembler # assembler
 import vanilla.vm as vanillavm # vanilla program logic
-import modded.osvm as moddedvm # modded program logic
+import modded.vm as moddedvm # modded program logic
 
 os_dev = True # determines if making the os where os specific logic is there along with regular logic
 
