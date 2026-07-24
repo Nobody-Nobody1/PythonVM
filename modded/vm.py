@@ -74,6 +74,4 @@ def run(binary_file):
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
 def os_logic(registers, stack, program_counter):
-    print(registers)
-    print(stack)
-    print(program_counter)
+    pass
