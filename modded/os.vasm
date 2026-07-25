@@ -3,7 +3,7 @@ load R254, 1 ; syscall: add to buffer
 load R253, 0 ; argument1: register index
 load R255, 1 ; trigger syscall LAST
 
-load R0, 66 ; ASCII B
+load R0, 89 ; ASCII Y
 load R254, 1 ; syscall: add to buffer
 load R253, 0 ; argument1: register index
 load R255, 1 ; trigger syscall LAST

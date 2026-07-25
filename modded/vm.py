@@ -86,7 +86,6 @@ def os_logic(registers, stack, program_counter, os_string_buffer):
     kernelsyscall = registers.get(254, 0)
     kernelsyscallargument1 = registers.get(253, 0)
     kernelsyscallargument2 = registers.get(252, 0)
-    #os_print_buffer = []
 
     if kerneltoggle == 1: # toggle for os syscalls
         #print("OS KERNEL ACTIVATED") for debugging when it starts
