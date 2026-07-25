@@ -7,12 +7,13 @@ OPCODES = {
     "halt": "68616c74",
 }
 
-DEBUG = True
+DEBUG = False
 
 def run(binary_file):
     program_counter = 0
     registers = {}
     stack = []
+    os_string_buffer = []
     max_cycles = 10000
     cycles = 0
 
@@ -67,11 +68,40 @@ def run(binary_file):
                 break
 
             # OS specific logic
-            os_logic(registers, stack, program_counter)
+            os_logic(registers, stack, program_counter, os_string_buffer)
 
             if DEBUG:
                 input ("Press ENTER to go to the next state")
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
-def os_logic(registers, stack, program_counter):
-    pass
+def os_logic(registers, stack, program_counter, os_string_buffer):
+    # User Programs can use R0 to R239
+    # OS reserved is the rest from R240 to R255
+    # R255 toggles OS logic behaviour
+    # R254 is the syscall for the kernel to use
+    # R253 is what to get for syscalls
+    # R252 are more options if needed with the syscall
+
+    kerneltoggle = registers.get(255, 0)
+    kernelsyscall = registers.get(254, 0)
+    kernelsyscallargument1 = registers.get(253, 0)
+    kernelsyscallargument2 = registers.get(252, 0)
+
+    if kerneltoggle == 1: # toggle for os syscalls
+        #print("OS KERNEL ACTIVATED") for debugging when it starts
+
+        if kernelsyscall == 1: # add letter to buffer
+            register = registers.get(kernelsyscallargument1, 0) # register to add
+            letter = chr(register)
+            os_string_buffer.append(letter)
+
+        if kernelsyscall == 2: # print os buffer
+            print(os_string_buffer)
+
+        elif kernelsyscall == 3: # reads user input
+            register = registers.get(kernelsyscallargument1, 0) # register to read and output keyboard input to it
+            value = input("Enter a value for R" + str(register) + ": ") # the value from user
+            registers[register] = int(value)
+            print(registers)
+
+        registers[255] = 0

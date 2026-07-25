@@ -1,2 +1,8 @@
-load R255, 10
-keep R255
+load R0, 65 ; ASCII A
+
+load R254, 1 ; syscall: add to buffer
+load R253, 0 ; argument1: register index
+load R255, 1 ; trigger syscall LAST
+
+load R254, 2 ; syscall: print buffer
+load R255, 1 ; trigger syscall LAST
