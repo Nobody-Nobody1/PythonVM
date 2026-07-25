@@ -86,6 +86,7 @@ def os_logic(registers, stack, program_counter, os_string_buffer):
     kernelsyscall = registers.get(254, 0)
     kernelsyscallargument1 = registers.get(253, 0)
     kernelsyscallargument2 = registers.get(252, 0)
+    #os_print_buffer = []
 
     if kerneltoggle == 1: # toggle for os syscalls
         #print("OS KERNEL ACTIVATED") for debugging when it starts
@@ -96,7 +97,8 @@ def os_logic(registers, stack, program_counter, os_string_buffer):
             os_string_buffer.append(letter)
 
         if kernelsyscall == 2: # print os buffer
-            print(os_string_buffer)
+            string = "".join(os_string_buffer)
+            print(string)
 
         elif kernelsyscall == 3: # reads user input
             register = registers.get(kernelsyscallargument1, 0) # register to read and output keyboard input to it
