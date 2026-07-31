@@ -1,10 +1,11 @@
 import pygame
 import socket
 import struct
+import colorsys
 
 # --- Settings ---
-WIDTH = 256
-HEIGHT = 256
+WIDTH = 127
+HEIGHT = 127
 FPS = 60
 
 # --- Setup Pygame ---
@@ -12,38 +13,49 @@ pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
+screen.fill((0, 0, 0))
+
 # --- Connect to frame stream ---
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect(("127.0.0.1", 9000))
+with socket.create_connection(("127.0.0.1", 9000)) as sock:
+    running = True
 
-running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        # --- Read frame size ---
+        header = sock.recv(8)
+        if not header:
+            continue
 
-    # --- Read frame size ---
-    header = sock.recv(4)
-    if not header:
-        continue
+        frame_size = struct.unpack("Q", header)[0]
+        print(frame_size)
 
-    frame_size = struct.unpack("I", header)[0]
+        # --- Read frame data ---
+        frame_data = b""
+        while len(frame_data) < frame_size:
+            chunk = sock.recv(frame_size - len(frame_data))
+            if not chunk:
+                break
+            frame_data += chunk
 
-    # --- Read frame data ---
-    frame_data = b""
-    while len(frame_data) < frame_size:
-        chunk = sock.recv(frame_size - len(frame_data))
-        if not chunk:
-            break
-        frame_data += chunk
+        palette = []
 
-    # --- Convert to Pygame surface ---
-    frame_surface = pygame.image.frombuffer(frame_data, (WIDTH, HEIGHT), "RGB")
+        for i in range(128):
+            hue = i / 128
+            color = colorsys.hsv_to_rgb(hue, 1, 1)
+            palette.append(color)
 
-    # --- Draw frame ---
-    screen.blit(frame_surface, (0, 0))
-    pygame.display.flip()
-    clock.tick(FPS)
 
-pygame.quit()
+        # --- Convert to Pygame surface ---
+        frame_surface = pygame.image.frombuffer(frame_data, (WIDTH, HEIGHT), "P")
+
+        # --- Draw frame ---
+        frame_surface.set_palette(palette)
+        print(palette)
+        screen.blit(frame_surface, (0, 0))
+        pygame.display.flip()
+        clock.tick(FPS)
+
+    pygame.quit()

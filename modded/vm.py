@@ -1,3 +1,12 @@
+import socket
+import struct
+import subprocess
+
+# --- Settings ---
+WIDTH = 127
+HEIGHT = 127
+FPS = 60
+
 OPCODES = {
     "load": "6c6f6164",
     "plus": "706c7573",
@@ -14,7 +23,7 @@ def run(binary_file):
     registers = {}
     stack = []
     os_string_buffer = []
-    os_frame_buffer = bytearray(256 * 256 * 3)
+    os_frame_buffer = bytearray(WIDTH * HEIGHT)
     max_cycles = 10000
     cycles = 0
 
@@ -116,6 +125,21 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
             print(registers)
 
         elif kernelsyscall == 4: # add pixel to buffer
-            print(os_frame_buffer)
+            index = (pixelx * pixely)
+            print(index)
+            os_frame_buffer[index] = pixelcolor
+            print(len(os_frame_buffer))
+            print("Video:", os_frame_buffer[1:11])
+        
+        elif kernelsyscall == 5:
+            # serve viewer as server
+            with socket.create_server(("127.0.0.1", 9000)) as server:
+                print("Server on port 9000...")
+                conn, addr = server.accept()
+                with conn:
+                    frame_size = WIDTH * HEIGHT
+                    header = struct.pack("Q", frame_size)
+                    conn.sendall(header)
+                    conn.sendall(os_frame_buffer)
 
         registers[255] = 0
