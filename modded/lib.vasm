@@ -1,3 +1,6 @@
+; lib.vasm
+; a library file to copy and paste premade code segments for syscalls, etc
+
 ; Adding to string buffer
 load R0, 65 ; ASCII A
 load R254, 1 ; syscall: add to buffer
@@ -6,6 +9,12 @@ load R255, 1 ; trigger syscall LAST
 
 ; Printing the string buffer
 load R254, 2 ; syscall: print buffer
+load R255, 1 ; trigger syscall LAST
+
+; Getting user input of a value
+load R0, 0
+load R254, 3 ; syscall: get user input
+load R253, 0 ; argument: register index
 load R255, 1 ; trigger syscall LAST
 
 ; add pixel to buffer

@@ -14,6 +14,7 @@ def run(binary_file):
     registers = {}
     stack = []
     os_string_buffer = []
+    os_frame_buffer = bytearray(256 * 256 * 3)
     max_cycles = 10000
     cycles = 0
 
@@ -68,24 +69,33 @@ def run(binary_file):
                 break
 
             # OS specific logic
-            os_logic(registers, stack, program_counter, os_string_buffer)
+            os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffer)
 
             if DEBUG:
                 input ("Press ENTER to go to the next state")
                 print("PC:", program_counter, "REG:", registers, "STACK:", stack)
 
-def os_logic(registers, stack, program_counter, os_string_buffer):
+def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffer):
     # User Programs can use R0 to R239
     # OS reserved is the rest from R240 to R255
     # R255 toggles OS logic behaviour
     # R254 is the syscall for the kernel to use
     # R253 is what to get for syscalls
     # R252 are more options if needed with the syscall
+    # R251 is X for pixel
+    # R250 is Y for pixel
+    # R249 is color value for pixel
 
+    # Syscalls
     kerneltoggle = registers.get(255, 0)
     kernelsyscall = registers.get(254, 0)
     kernelsyscallargument1 = registers.get(253, 0)
     kernelsyscallargument2 = registers.get(252, 0)
+
+    # Graphics
+    pixelx = registers.get(251, 0)
+    pixely = registers.get(250, 0)
+    pixelcolor = registers.get(249, 0)
 
     if kerneltoggle == 1: # toggle for os syscalls
         #print("OS KERNEL ACTIVATED") for debugging when it starts
@@ -104,5 +114,8 @@ def os_logic(registers, stack, program_counter, os_string_buffer):
             value = input("Enter a value for R" + str(register) + ": ") # the value from user
             registers[register] = int(value)
             print(registers)
+
+        elif kernelsyscall == 4: # add pixel to buffer
+            print(os_frame_buffer)
 
         registers[255] = 0
