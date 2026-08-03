@@ -13,8 +13,7 @@ load R255, 1   ; trigger syscall LAST
 
 plus R0, R1     ; R0 += R1
 take R2, R4     ; R2 -= 1
-plus R251, R4
-plus R250, R4
+plus R251, R1 ; ; moving it horizontally
 jump R3, R2     ; backward jump while R2 > 0
 
 ; send buffer
