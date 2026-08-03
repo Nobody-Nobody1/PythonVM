@@ -3,6 +3,14 @@ import socket
 import struct
 import colorsys
 
+def make_palette():
+    palette = []
+    for i in range(128):
+        hue = i / 128
+        color = colorsys.hsv_to_rgb(hue, 1, 1)
+        palette.append(color)
+    return palette
+
 # --- Settings ---
 WIDTH = 127
 HEIGHT = 127
@@ -12,8 +20,6 @@ FPS = 60
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
-
-screen.fill((0, 0, 0))
 
 # --- Connect to frame stream ---
 with socket.create_connection(("127.0.0.1", 9000)) as sock:
@@ -30,7 +36,6 @@ with socket.create_connection(("127.0.0.1", 9000)) as sock:
             continue
 
         frame_size = struct.unpack("Q", header)[0]
-        print(frame_size)
 
         # --- Read frame data ---
         frame_data = b""
@@ -40,21 +45,17 @@ with socket.create_connection(("127.0.0.1", 9000)) as sock:
                 break
             frame_data += chunk
 
-        palette = []
-
-        for i in range(128):
-            hue = i / 128
-            color = colorsys.hsv_to_rgb(hue, 1, 1)
-            palette.append(color)
-
-
         # --- Convert to Pygame surface ---
-        frame_surface = pygame.image.frombuffer(frame_data, (WIDTH, HEIGHT), "P")
+        frame_surface = pygame.image.frombuffer(frame_data, (WIDTH, HEIGHT), 'P')
+        palette = make_palette()
+        frame_surface.set_palette(palette)
+        print(palette[0])
 
         # --- Draw frame ---
-        frame_surface.set_palette(palette)
-        print(palette)
+        frame_surface.set_at((1,1), 1)
         screen.blit(frame_surface, (0, 0))
+
+        # --- Update Screen ---
         pygame.display.flip()
         clock.tick(FPS)
 

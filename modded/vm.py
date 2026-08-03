@@ -126,10 +126,17 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
 
         elif kernelsyscall == 4: # add pixel to buffer
             index = (pixelx * pixely)
-            print(index)
-            os_frame_buffer[index] = pixelcolor
-            print(len(os_frame_buffer))
-            print("Video:", os_frame_buffer[1:11])
+            print("Index:", index)
+
+            if index == len(os_frame_buffer):
+                os_frame_buffer[index-1] = pixelcolor
+            elif index == 0:
+                print("Instruction at", program_counter, "has R251 and R250 multiply to 0 which results in nothing for the framebuffer")
+            else:
+                os_frame_buffer[index] = pixelcolor
+            
+            print("Frame Length:", len(os_frame_buffer))
+            print(os_frame_buffer[0:10])
         
         elif kernelsyscall == 5:
             # serve viewer as server

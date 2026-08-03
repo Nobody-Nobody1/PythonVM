@@ -1,4 +1,11 @@
 ; add pixel to buffer
+load R251, 0   ; argument: X coordinate
+load R250, 0 ; argument: Y coordinate
+load R249, 2   ; argument: color value
+load R254, 4   ; syscall: add to pixel buffer
+load R255, 1   ; trigger syscall LAST
+
+; add pixel to buffer
 load R251, 1   ; argument: X coordinate
 load R250, 1 ; argument: Y coordinate
 load R249, 1   ; argument: color value
@@ -8,6 +15,13 @@ load R255, 1   ; trigger syscall LAST
 ; add pixel to buffer
 load R251, 1   ; argument: X coordinate
 load R250, 2 ; argument: Y coordinate
+load R249, 2   ; argument: color value
+load R254, 4   ; syscall: add to pixel buffer
+load R255, 1   ; trigger syscall LAST
+
+; add pixel to buffer
+load R251, 127   ; argument: X coordinate
+load R250, 127 ; argument: Y coordinate
 load R249, 2   ; argument: color value
 load R254, 4   ; syscall: add to pixel buffer
 load R255, 1   ; trigger syscall LAST
