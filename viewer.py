@@ -5,10 +5,10 @@ import colorsys
 
 def make_palette():
     palette = []
-    for i in range(128):
-        hue = i / 128
-        color = colorsys.hsv_to_rgb(hue, 1, 1)
-        palette.append(color)
+    for i in range(256):
+        hue = i / 256
+        r, g, b = colorsys.hsv_to_rgb(hue, 1, 1)
+        palette.append((int(r*255), int(g*255), int(b*255)))
     return palette
 
 # --- Settings ---
@@ -49,10 +49,11 @@ with socket.create_connection(("127.0.0.1", 9000)) as sock:
         frame_surface = pygame.image.frombuffer(frame_data, (WIDTH, HEIGHT), 'P')
         palette = make_palette()
         frame_surface.set_palette(palette)
-        print(palette[0])
+        frame_surface.set_palette_at(0,(0,0,0))
+        frame_surface.set_palette_at(1,(255,255,255))
+        print(palette[0:11])
 
         # --- Draw frame ---
-        frame_surface.set_at((1,1), 1)
         screen.blit(frame_surface, (0, 0))
 
         # --- Update Screen ---

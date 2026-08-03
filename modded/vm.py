@@ -125,16 +125,13 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
             print(registers)
 
         elif kernelsyscall == 4: # add pixel to buffer
-            index = (pixelx * pixely)
+            index = pixely * WIDTH + pixelx
             print("Index:", index)
 
-            if index == len(os_frame_buffer):
-                os_frame_buffer[index-1] = pixelcolor
-            elif index == 0:
-                print("Instruction at", program_counter, "has R251 and R250 multiply to 0 which results in nothing for the framebuffer")
-            else:
+            if 0 <= index < len(os_frame_buffer):
                 os_frame_buffer[index] = pixelcolor
-            
+            else:
+                print("Pixel out of bounds:", pixelx, pixely, "-> index", index)
             print("Frame Length:", len(os_frame_buffer))
             print(os_frame_buffer[0:10])
         
