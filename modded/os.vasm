@@ -1,13 +1,13 @@
 load R0, 0     ; initial value
 load R1, 1     ; increment
 load R2, 127      ; loop counter
-load R3, -6     ; backward jump (6 instructions)
+load R3, -5     ; backward jump (5 instructions)
 load R4, 1      ; subtraction amount
 load R251, 0   ; argument: X coordinate
 load R250, 0 ; argument: Y coordinate
+load R249, 127   ; argument: color value
 
 ; add pixel to buffer
-load R249, 127   ; argument: color value
 load R254, 4   ; syscall: add to pixel buffer
 load R255, 1   ; trigger syscall LAST
 
