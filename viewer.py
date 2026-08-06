@@ -51,7 +51,6 @@ with socket.create_connection(("127.0.0.1", 9000)) as sock:
         frame_surface.set_palette(palette)
         frame_surface.set_palette_at(0,(0,0,0))
         frame_surface.set_palette_at(1,(255,255,255))
-        print(palette[0:11])
 
         # --- Draw frame ---
         screen.blit(frame_surface, (0, 0))

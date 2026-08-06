@@ -24,7 +24,7 @@ def run(binary_file):
     stack = []
     os_string_buffer = []
     os_frame_buffer = bytearray(WIDTH * HEIGHT)
-    max_cycles = 10000
+    max_cycles = 100000
     cycles = 0
 
     with open(binary_file, "rb") as binary:

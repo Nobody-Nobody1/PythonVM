@@ -1,21 +1,28 @@
-load R0, 0     ; initial value
-load R1, 1     ; increment
-load R2, 127      ; loop counter
-load R3, -5     ; backward jump (5 instructions)
-load R4, 1      ; subtraction amount
+; initial setup
+load R0, 127   ; loop counter vertically
+load R1, -6 ; backward jump for vertically
+load R2, 127      ; loop counter horizontally
+load R3, -4     ; backward jump for horizontally
+load R4, 1   ; amount to decrement or increment by
+
+; syscall arguments
 load R251, 0   ; argument: X coordinate
-load R250, 10 ; argument: Y coordinate
+load R250, 0   ; argument: Y coordinate
 load R249, 127   ; argument: color value
 
-; add pixel to buffer
+; add pixel to buffer according to R0 and R2
 load R254, 4   ; syscall: add to pixel buffer
-load R255, 1   ; trigger syscall LAST
-plus R0, R1     ; R0 += R1
-take R2, R4     ; R2 -= 1
-plus R251, R1 ; ; moving it horizontally
-jump R3, R2     ; backward jump while R2 > 0
+load R255, 1   ; trigger os logic
+plus R251, R4  ; add to X coordinate after adding earlier coordinates
+take R2, R4    ; take away from counter horizontally
+jump R3, R2    ; jump back while R2>0
+
+load R2, 127      ; loop counter horizontally reset
+plus R250, R4    ; change to the next Y coordinate to do the same loop again
+take R0, R4      ; take away from counter vertically
+jump R1, R0    ; jump back while R0>0
 
 ; send buffer
 load R254, 5 ; syscall: add to pixel buffer
-load R255, 1 ; trigger syscall LAST
+load R255, 1 ; trigger os logic
 halt
