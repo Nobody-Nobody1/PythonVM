@@ -1,6 +1,6 @@
 ; initial setup
 load R0, 127   ; loop counter vertically
-load R1, -6 ; backward jump for vertically
+load R1, -7 ; backward jump for vertically
 load R2, 127      ; loop counter horizontally
 load R3, -4     ; backward jump for horizontally
 load R4, 1   ; amount to decrement or increment by
