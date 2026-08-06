@@ -29,7 +29,6 @@ load R254, 5 ; syscall: add to pixel buffer
 load R255, 1   ; trigger os logic
 
 ; filling the screen in a specific size from any coordinate as long as R251+R0=127 or R250+R2=127
-; currently creates a cool diagonal instead of filling the screen properly but its fine for now
 ; initial setup
 load R0, 127   ; loop counter vertically
 load R1, -7 ; backward jump for vertically
@@ -51,6 +50,7 @@ take R2, R4    ; take away from counter horizontally
 jump R3, R2    ; jump back while R2>0
 
 load R2, 127      ; loop counter horizontally reset
+load R251, 0    ; argument: X coordinate reset
 plus R250, R4    ; change to the next Y coordinate to do the same loop again
 take R0, R4      ; take away from counter vertically
 jump R1, R0    ; jump back while R0>0

@@ -24,7 +24,7 @@ def run(binary_file):
     stack = []
     os_string_buffer = []
     os_frame_buffer = bytearray(WIDTH * HEIGHT)
-    max_cycles = 100000
+    max_cycles = 1000000
     cycles = 0
 
     with open(binary_file, "rb") as binary:
@@ -106,7 +106,7 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
     pixelx = registers.get(251, 0)
     pixely = registers.get(250, 0)
     pixelcolor = registers.get(249, 0)
-    index_type = registers.get(248, 0)  # let user programs choose mode to display programs
+    index_type = registers.get(248, 0)
 
     if kerneltoggle == 1: # toggle for os syscalls
         #print("OS KERNEL ACTIVATED") for debugging when it starts
@@ -124,20 +124,13 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
             register = registers.get(kernelsyscallargument1, 0) # register to read and output keyboard input to it
             value = input("Enter a value for R" + str(register) + ": ") # the value from user
             registers[register] = int(value)
-            print(registers)
 
         elif kernelsyscall == 4: # add pixel to buffer
             index = graphics_mode_select(index_type, pixelx, pixely)
-            
-            print("Index:", index)
-            print("Index type:", index_type)
-
             if 0 <= index < len(os_frame_buffer):
                 os_frame_buffer[index] = pixelcolor
             else:
                 print("Pixel out of bounds:", pixelx, pixely, "-> index", index)
-            print("Frame Length:", len(os_frame_buffer))
-            print(os_frame_buffer[0:10])
         
         elif kernelsyscall == 5:
             # serve viewer as server

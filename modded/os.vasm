@@ -19,6 +19,7 @@ take R2, R4    ; take away from counter horizontally
 jump R3, R2    ; jump back while R2>0
 
 load R2, 127      ; loop counter horizontally reset
+load R251, 0    ; argument: X coordinate reset
 plus R250, R4    ; change to the next Y coordinate to do the same loop again
 take R0, R4      ; take away from counter vertically
 jump R1, R0    ; jump back while R0>0
