@@ -94,6 +94,7 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
     # R251 is X for pixel
     # R250 is Y for pixel
     # R249 is color value for pixel
+    # R248 is for selecting which graphics mode to use
 
     # Syscalls
     kerneltoggle = registers.get(255, 0)
@@ -105,6 +106,7 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
     pixelx = registers.get(251, 0)
     pixely = registers.get(250, 0)
     pixelcolor = registers.get(249, 0)
+    index_type = registers.get(248, 0)  # let user programs choose mode to display programs
 
     if kerneltoggle == 1: # toggle for os syscalls
         #print("OS KERNEL ACTIVATED") for debugging when it starts
@@ -125,8 +127,10 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
             print(registers)
 
         elif kernelsyscall == 4: # add pixel to buffer
-            index = pixely * WIDTH + pixelx
+            index = graphics_mode_select(index_type, pixelx, pixely)
+            
             print("Index:", index)
+            print("Index type:", index_type)
 
             if 0 <= index < len(os_frame_buffer):
                 os_frame_buffer[index] = pixelcolor
@@ -147,3 +151,32 @@ def os_logic(registers, stack, program_counter, os_string_buffer, os_frame_buffe
                     conn.sendall(os_frame_buffer)
 
         registers[255] = 0
+
+def graphics_mode_select(index_type, pixelx, pixely):
+    if index_type == 0:
+        index = pixely * WIDTH + pixelx
+    elif index_type == 1: 
+        index = pixelx * pixely
+    elif index_type == 2:
+        index = (pixelx ^ pixely)
+    elif index_type == 3:
+        index = (pixelx & pixely)
+    elif index_type == 4:
+        index = (pixelx | pixely)
+    elif index_type == 5:
+        index = (pixelx + pixely)
+    elif index_type == 6:
+        index = abs(pixelx - pixely)
+    elif index_type == 7:
+        index = (pixelx * pixely) ^ pixelx
+    elif index_type == 8:
+        index = (pixelx * pixely) + pixelx
+    elif index_type == 9:
+        index = (pixelx * pixely) % (WIDTH * HEIGHT)
+    elif index_type == 10:
+        index = pixely * WIDTH
+    elif index_type == 11:
+        index = pixelx * HEIGHT
+    elif index_type == 12:
+        index = (pixelx + pixely) % 2
+    return index

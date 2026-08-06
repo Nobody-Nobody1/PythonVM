@@ -41,6 +41,7 @@ load R4, 1   ; amount to decrement or increment by
 load R251, 0   ; argument: X coordinate
 load R250, 0   ; argument: Y coordinate
 load R249, 127   ; argument: color value
+load R248, 0   ; argument: graphics display mode
 
 ; add pixel to buffer according to R0 and R2
 load R254, 4   ; syscall: add to pixel buffer
@@ -55,6 +56,6 @@ take R0, R4      ; take away from counter vertically
 jump R1, R0    ; jump back while R0>0
 
 ; send buffer
-load R254, 5 ; syscall: add to pixel buffer
+load R254, 5 ; syscall: send to viewer
 load R255, 1 ; trigger os logic
 halt
