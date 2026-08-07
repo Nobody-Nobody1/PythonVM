@@ -28,7 +28,7 @@ load R255, 1   ; trigger os logic
 load R254, 5 ; syscall: add to pixel buffer
 load R255, 1   ; trigger os logic
 
-; filling the screen in a specific size from any coordinate as long as R251+R0=127 or R250+R2=127
+; filling the screen in a specific size from any coordinate
 ; initial setup
 load R0, 127   ; loop counter vertically
 load R1, -7 ; backward jump for vertically
@@ -39,7 +39,7 @@ load R4, 1   ; amount to decrement or increment by
 ; syscall arguments
 load R251, 0   ; argument: X coordinate
 load R250, 0   ; argument: Y coordinate
-load R249, 127   ; argument: color value
+load R249, 100   ; argument: color value
 load R248, 0   ; argument: graphics display mode
 
 ; add pixel to buffer according to R0 and R2

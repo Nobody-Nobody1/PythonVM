@@ -150,26 +150,4 @@ def graphics_mode_select(index_type, pixelx, pixely):
         index = pixely * WIDTH + pixelx
     elif index_type == 1: 
         index = pixelx * pixely
-    elif index_type == 2:
-        index = (pixelx ^ pixely)
-    elif index_type == 3:
-        index = (pixelx & pixely)
-    elif index_type == 4:
-        index = (pixelx | pixely)
-    elif index_type == 5:
-        index = (pixelx + pixely)
-    elif index_type == 6:
-        index = abs(pixelx - pixely)
-    elif index_type == 7:
-        index = (pixelx * pixely) ^ pixelx
-    elif index_type == 8:
-        index = (pixelx * pixely) + pixelx
-    elif index_type == 9:
-        index = (pixelx * pixely) % (WIDTH * HEIGHT)
-    elif index_type == 10:
-        index = pixely * WIDTH
-    elif index_type == 11:
-        index = pixelx * HEIGHT
-    elif index_type == 12:
-        index = (pixelx + pixely) % 2
     return index

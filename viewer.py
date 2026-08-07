@@ -3,13 +3,10 @@ import socket
 import struct
 import colorsys
 
-def make_palette():
-    palette = []
-    for i in range(256):
-        hue = i / 256
-        r, g, b = colorsys.hsv_to_rgb(hue, 1, 1)
-        palette.append((int(r*255), int(g*255), int(b*255)))
-    return palette
+palette_size = 128
+
+def make_palette(palette_size):
+    return [(i * 2, i * 2, i * 2) for i in range(palette_size)]
 
 # --- Settings ---
 WIDTH = 127
@@ -47,10 +44,8 @@ with socket.create_connection(("127.0.0.1", 9000)) as sock:
 
         # --- Convert to Pygame surface ---
         frame_surface = pygame.image.frombuffer(frame_data, (WIDTH, HEIGHT), 'P')
-        palette = make_palette()
+        palette = make_palette(palette_size)
         frame_surface.set_palette(palette)
-        frame_surface.set_palette_at(0,(0,0,0))
-        frame_surface.set_palette_at(1,(255,255,255))
 
         # --- Draw frame ---
         screen.blit(frame_surface, (0, 0))
