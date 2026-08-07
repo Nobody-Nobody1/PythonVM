@@ -4,6 +4,7 @@ import struct
 __all__ = ["handle_syscalls"]
 
 def handle_syscalls(registers, stack, program_counter, os_string_buffer, os_frame_buffer, WIDTH, HEIGHT):
+    # Color palette is grayscale from 0-127 due to the way signed bits are handled for jumps
     # User Programs can use R0 to R239
     # OS reserved is the rest from R240 to R255
     # R255 toggles OS logic behaviour

@@ -1,5 +1,4 @@
-load R0, 10
+load R0, 200
 copy R1, R0
 keep R1
-plus R0, R1
 halt
