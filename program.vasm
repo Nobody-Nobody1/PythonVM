@@ -1,31 +1,5 @@
-; filling the screen in a specific size from any coordinate
-; initial setup
-load R0, 127   ; loop counter vertically
-load R1, -7 ; backward jump for vertically
-load R2, 127      ; loop counter horizontally
-load R3, -4     ; backward jump for horizontally
-load R4, 1   ; amount to decrement or increment by
-
-; syscall arguments
-load R251, 0   ; argument: X coordinate
-load R250, 0   ; argument: Y coordinate
-load R249, 100   ; argument: color value
-load R248, 0   ; argument: graphics display mode
-
-; add pixel to buffer according to R0 and R2
-load R254, 4   ; syscall: add to pixel buffer
-load R255, 1   ; trigger os logic
-plus R251, R4  ; add to X coordinate after adding earlier coordinates
-take R2, R4    ; take away from counter horizontally
-jump R3, R2    ; jump back while R2>0
-
-load R2, 127      ; loop counter horizontally reset
-load R251, 0    ; argument: X coordinate reset
-plus R250, R4    ; change to the next Y coordinate to do the same loop again
-take R0, R4      ; take away from counter vertically
-jump R1, R0    ; jump back while R0>0
-
-; send buffer
-load R254, 5 ; syscall: send to viewer
-load R255, 1 ; trigger os logic
+load R0, 10
+copy R1, R0
+keep R1
+plus R0, R1
 halt

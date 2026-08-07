@@ -1,11 +1,4 @@
-OPCODES = {
-    "load": "6c6f6164",
-    "plus": "706c7573",
-    "take": "74616b65",
-    "keep": "6b656570",
-    "jump": "6a756d70",
-    "halt": "68616c74",
-}
+from vm import OPCODES
 
 def assemble(src, out):
     with open(src, "r") as program, open(out, "wb") as binary:

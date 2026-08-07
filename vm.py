@@ -1,12 +1,22 @@
-from assembler import OPCODES
 from os_logic import handle_syscalls
+
+OPCODES = {
+    "load": "6c6f6164",
+    "plus": "706c7573",
+    "take": "74616b65",
+    "keep": "6b656570",
+    "jump": "6a756d70",
+    "halt": "68616c74",
+    "copy": "636f7079",
+}
 
 # --- Settings ---
 WIDTH = 127
 HEIGHT = 127
 FPS = 60
 
-DEBUG = False
+DEBUG = True
+OS = False
 
 def run(binary_file):
     program_counter = 0
@@ -67,9 +77,11 @@ def run(binary_file):
             elif opcode == OPCODES["halt"]:
                 break
 
-            # OS specific logic
-            handle_syscalls(registers, stack, program_counter, os_string_buffer, os_frame_buffer, WIDTH, HEIGHT)
+            elif opcode == OPCODES["copy"]:
+                registers[op1] = registers[op2]
+                program_counter += 6
 
-            if DEBUG:
-                input ("Press ENTER to go to the next state")
-                print("PC:", program_counter, "REG:", registers, "STACK:", stack)
+            if OS:
+                handle_syscalls(registers, stack, program_counter, os_string_buffer, os_frame_buffer, WIDTH, HEIGHT)
+
+    print(registers, stack)
