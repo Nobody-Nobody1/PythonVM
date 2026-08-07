@@ -8,6 +8,7 @@ OPCODES = {
     "jump": "6a756d70",
     "halt": "68616c74",
     "copy": "636f7079",
+    
 }
 
 # --- Settings ---
@@ -15,8 +16,8 @@ WIDTH = 127
 HEIGHT = 127
 FPS = 60
 
-DEBUG = True
-OS = False
+PRINT = True
+OS = True
 
 def run(binary_file):
     program_counter = 0
@@ -84,4 +85,6 @@ def run(binary_file):
             if OS:
                 handle_syscalls(registers, stack, program_counter, os_string_buffer, os_frame_buffer, WIDTH, HEIGHT)
 
-    print(registers, stack)
+        if PRINT:
+            print("Registers: " + str(registers))
+            print("Stack: " + str(stack))
