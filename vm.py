@@ -1,6 +1,5 @@
 import socket
 import struct
-import subprocess
 
 # --- Settings ---
 WIDTH = 127

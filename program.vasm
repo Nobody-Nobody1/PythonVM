@@ -1,3 +1,4 @@
+; filling the screen in a specific size from any coordinate
 ; initial setup
 load R0, 127   ; loop counter vertically
 load R1, -7 ; backward jump for vertically
