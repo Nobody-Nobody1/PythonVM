@@ -8,7 +8,7 @@ OPCODES = {
     "jump": "6a756d70",
     "halt": "68616c74",
     "copy": "636f7079",
-    
+
 }
 
 # --- Settings ---
@@ -16,8 +16,11 @@ WIDTH = 127
 HEIGHT = 127
 FPS = 60
 
+# Info
+# all opcodes must be 4 letters to be 4 bytes since every instruction set is 6 bytes each so it iterates by 6
+
 PRINT = True
-OS = True
+SYSCALL = True
 
 def run(binary_file):
     program_counter = 0
@@ -82,7 +85,7 @@ def run(binary_file):
                 registers[op1] = registers[op2]
                 program_counter += 6
 
-            if OS:
+            if SYSCALL:
                 handle_syscalls(registers, stack, program_counter, os_string_buffer, os_frame_buffer, WIDTH, HEIGHT)
 
         if PRINT:
