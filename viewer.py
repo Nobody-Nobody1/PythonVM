@@ -1,12 +1,8 @@
 import pygame
 import socket
 import struct
-import colorsys
 
-palette_size = 128
-
-def make_palette(palette_size):
-    return [(i * 2, i * 2, i * 2) for i in range(palette_size)]
+from color import make_palette
 
 # --- Settings ---
 WIDTH = 127
@@ -44,7 +40,7 @@ with socket.create_connection(("127.0.0.1", 9000)) as sock:
 
         # --- Convert to Pygame surface ---
         frame_surface = pygame.image.frombuffer(frame_data, (WIDTH, HEIGHT), 'P')
-        palette = make_palette(palette_size)
+        palette = make_palette()
         frame_surface.set_palette(palette)
 
         # --- Draw frame ---
