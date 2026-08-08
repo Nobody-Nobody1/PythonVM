@@ -86,7 +86,7 @@ def run(binary_file):
                 program_counter += 6
 
             if SYSCALL:
-                handle_syscalls(registers, stack, program_counter, os_string_buffer, os_frame_buffer, WIDTH, HEIGHT)
+                handle_syscalls(registers, os_string_buffer, os_frame_buffer, WIDTH, HEIGHT)
 
         if PRINT:
             print("Registers: " + str(registers))
